@@ -1,0 +1,397 @@
+import { LogWarning } from "warning.slint";
+import { CONST-FUNCTION-GLOBAL } from "CONST_FUNCTION.slint";
+import { NAVBAR } from "navbar.slint";
+import { LineEdit, VerticalBox, ScrollView, ListView } from "std-widgets.slint";
+struct ticket {
+
+}
+struct flight {
+    flightCode : string,
+    departure : string,
+    destination : string,
+    trangthai : int,
+    planeCode : string,
+}
+export global functionAPP {
+    // noi day se dat cac data cua ppp 
+    in-out property <[flight]> flightListPassengerPage : [
+        {flightCode : "DESA", departure : "25/11/2023 ", destination : "ha Noi", trangthai : 1, planeCode : "MH370"},
+        {flightCode : "DESA", departure : "25/11/2023 ", destination : "ha Noi", trangthai : 1, planeCode : "MH370"},
+        {flightCode : "DESA", departure : "25/11/2023 ", destination : "ha Noi", trangthai : 1, planeCode : "MH370"},
+        {flightCode : "DESA", departure : "25/11/2023 ", destination : "ha Noi", trangthai : 1, planeCode : "MH370"},
+        {flightCode : "DESA", departure : "25/11/2023 ", destination : "ha Noi", trangthai : 1, planeCode : "MH370"},
+        {flightCode : "DESA", departure : "25/11/2023 ", destination : "ha Noi", trangthai : 1, planeCode : "MH370"},
+        {flightCode : "DESA", departure : "25/11/2023 ", destination : "ha Noi", trangthai : 1, planeCode : "MH370"},
+        {flightCode : "DESA", departure : "25/11/2023 ", destination : "ha Noi", trangthai : 1, planeCode : "MH370"}
+    ];
+}
+component passengerPage-search_filghtCode inherits Rectangle {
+    border-width: 4phx;
+    border-color: black;
+    in-out property <string> flightCode : "";
+    width: 400phx;
+    VerticalLayout {
+        alignment: center;
+        HorizontalLayout {
+            alignment: center;
+            spacing: 12phx;
+            Rectangle {
+                Text {text: "Flight Code";color: black;font-weight: 700;font-size: 16phx;}
+            }
+            Rectangle {
+                background: gray;
+                height: 40phx;
+                width: 250phx;
+                flightCode_input := LineEdit {
+                    width: 100%;
+                    height: 100%;
+                    placeholder-text: "Enter Flight Code";
+                    horizontal-alignment: center;
+                    font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;
+                    edited => {flightCode = self.text;}
+                }
+            }
+        }
+    }
+}
+component passengerPage_search inherits Rectangle {
+    callback unFocusPassSearch();
+    VerticalLayout {
+        alignment: center;
+        HorizontalLayout {
+            spacing: 12px;
+            alignment: start;
+            padding: 4phx;
+            padding-left: 0;
+            searchInfo := passengerPage-search-filghtCode {
+                height: 100%;
+            }
+            Rectangle {
+                width: 100phx;
+                background: #FF6347;
+                opacity: 1;
+                Text {
+                    text: "SEARCH";
+                    font-weight: 700;
+                }
+                touchArea := TouchArea {
+                    clicked => {
+                        // searchInfo.flightCode la ma chuyen bay trong o text
+                        debug(searchInfo.flightCode);
+                        unFocusPassSearch();
+                    }
+                }
+                states [
+                    hasPress when touchArea.pressed : {
+                        opacity : 0.5;
+                    }
+                ]
+            }
+        }
+    }
+}
+component boxFilterDAY inherits Rectangle {
+    in-out property <string> data;
+    height: 50px;
+    HorizontalLayout {
+        Rectangle {
+            width : 40%;
+            background: #C0C0C0;
+            Text {text: "DAY";font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;}
+            TouchArea {
+                clicked => {
+                    inputDayFliter.focus();
+                }
+            }
+        }
+        Rectangle {
+            background: gray;
+            horizontal-stretch: 7;
+            inputDayFliter := LineEdit {width: 100%; height: 100%;font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;}
+        }
+    }
+}
+component boxFilterMONTH inherits Rectangle {
+    in-out property <string> data;
+    height: 50px;
+    HorizontalLayout {
+        Rectangle {
+            width: 40%;
+            background: #C0C0C0;
+            Text {text: "MONTH";font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;}
+            TouchArea {
+                clicked => {
+                    CONST-FUNCTION-GLOBAL.SHOW_WARNING_ERORR("SS");
+                    inputMonthFilter.focus();
+                }
+            }
+        }
+        Rectangle {
+            background: gray;
+            horizontal-stretch: 7;
+            inputMonthFilter := LineEdit {width: 100%; height: 100%;font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;}
+        }
+    }
+}
+component boxFilterYEAR inherits Rectangle {
+    in-out property <string> data;
+    height: 50px;
+    HorizontalLayout {
+        Rectangle {
+            width: 40%;
+            background: #C0C0C0;
+            Text {text: "YEAR";font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;}
+            TouchArea {
+                clicked => {
+                    inputYearFilter.focus();
+                }
+            }
+        }
+        Rectangle {
+            background: gray;
+            horizontal-stretch: 7;
+            inputYearFilter := LineEdit {width: 100%; height: 100%;font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;}
+        }
+    }
+}
+component boxFilterDESTINATION inherits Rectangle {
+    in-out property <string> data;
+    height: 50px;
+    HorizontalLayout {
+        Rectangle {
+            width: 40%;
+            background: #C0C0C0;
+            Text {text: "DESTINATION";font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;}
+            TouchArea {
+                clicked => {
+                    inputDesFliter.focus();
+                }
+            }
+        }
+        Rectangle {
+            background: gray;
+            horizontal-stretch: 7;
+            inputDesFliter := LineEdit {width: 100%; height: 100%;font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;}
+        }
+    }
+}
+component blockClickPassenger inherits Rectangle {
+    callback unfocusFilterThere();
+    height: 100phx;
+    VerticalLayout {
+        alignment: end;
+        HorizontalLayout {
+            alignment: center;
+            myButtonFliter := Rectangle {
+                btnArea := TouchArea {
+                    clicked => {
+                        unfocusFilterThere();
+                    }
+                }
+                width: 200phx;
+                height: 80phx;
+                background: #FDF5E6;
+                Text {text: "FILTER";color: black; font-size:16phx; font-weight: 700;}
+
+                states [
+                    ac when btnArea.pressed : {
+                        background: #FFF;
+                    }
+                ]
+            }
+        }
+    }
+}
+component FilterBoxFlightPassenger inherits Rectangle {
+    callback unfocusBlockClickFilter();
+    background: wheat;
+    border-width: 20phx;
+    border-color: transparent;
+    VerticalLayout {
+        spacing : 15px;
+        alignment: center;
+        padding: 20phx;
+        Rectangle {
+            width: 100%; height : 100phx; background: transparent;
+            Text {text: "FILTER_BY_FIELD";color: black; font-size: 28phx;}
+        }
+        boxFilterDAY {}
+        boxFilterMONTH {}
+        boxFilterYEAR {}
+        boxFilterDESTINATION {}
+        blockClickPassenger {
+            unfocusFilterThere => {
+                unfocusBlockClickFilter();
+            }
+        }
+    }
+}
+component listPassenger inherits Rectangle {
+    // border-width: 4phx;
+    // border-color: black;
+    ListView {
+        width: 100%;
+        height: 100%;
+        for data[index] in functionAPP.flightListPassengerPage : VerticalLayout {
+            padding: 4phx;
+            itemList := Rectangle {
+            width: 100%;
+            height: 40phx;
+            background: wheat;
+            itemListArea := TouchArea {
+                clicked => {
+                    
+                }
+            }
+            states [
+                hasHover when itemListArea.has-hover : {
+                    itemList.background : #FF9999;
+                }
+            ]
+            }
+        }
+    }
+}
+component passengerPage_list_filterBox inherits Rectangle{
+    callback unfocusBlockFliter();
+    height: (CONST-FUNCTION-GLOBAL.MAX_HEIGHT * 0.92)* 0.865;
+    border-width: 2phx;
+    border-color: black;
+    VerticalLayout {
+        padding: 34phx;
+        vertical-stretch: 1;
+        HorizontalLayout {
+            spacing: 12phx;
+            listPassenger := Rectangle {
+                horizontal-stretch: 7;
+                listPassenger {}
+            }
+            filterPassager := Rectangle {
+                horizontal-stretch: 3;
+                FilterBoxFlightPassenger {unfocusBlockClickFilter => {
+                    unfocusBlockFliter();
+                }}
+            }
+        }
+    }
+}
+// cac trang page chinh
+component passengerPage inherits Rectangle {
+    callback unFocusPassPage();
+    VerticalLayout {
+        padding: CONST-FUNCTION-GLOBAL.SPACEAPPAROUND;
+        padding-top: CONST-FUNCTION-GLOBAL.SPACEAPPAROUND / 2;
+        padding-bottom: CONST-FUNCTION-GLOBAL.SPACEAPPAROUND / 4;
+        passengerPage-search {
+            unFocusPassSearch => {
+                unFocusPassPage();
+            }
+        }
+        passengerPage-list-filterBox {unfocusBlockFliter => {unFocusPassPage()}}
+    }
+    states [
+        show when CONST-FUNCTION-GLOBAL.page_number_SHOW == 0 : {
+            visible : true;
+        }
+        hiden when CONST-FUNCTION-GLOBAL.page_number_SHOW != 0 : {
+            visible : false;
+        }
+    ]
+}
+component ticketPage inherits Rectangle {
+    width: 100phx; height: 100phx;background: red; Text {text: "Ve CHuyen Bay";}
+    states [
+        show when CONST-FUNCTION-GLOBAL.page_number_SHOW == 1 : {
+            visible : true;
+        }
+        hiden when CONST-FUNCTION-GLOBAL.page_number_SHOW != 1 : {
+            visible : false;
+        }
+    ]
+}
+component planePage inherits Rectangle {
+    width: 100phx; height: 100phx;background: red; Text {text: "May Bay";}
+
+    states [
+        show when CONST-FUNCTION-GLOBAL.page_number_SHOW == 2 : {
+            visible : true;
+        }
+        hiden when CONST-FUNCTION-GLOBAL.page_number_SHOW != 2 : {
+            visible : false;
+        }
+    ]
+}
+component flightPage inherits Rectangle {
+    width: 100phx; height: 100phx;background: red; Text {text: "Chuyen Bay";}
+
+    states [
+        show when CONST-FUNCTION-GLOBAL.page_number_SHOW == 3 : {
+            visible : true;
+        }
+        hiden when CONST-FUNCTION-GLOBAL.page_number_SHOW != 3 : {
+            visible : false;
+        }
+    ]
+}
+component staticticalpage inherits Rectangle {
+    width: 100phx; height: 100phx;background: red; Text {text: "Thong Ke";}
+
+    states [
+        show when CONST-FUNCTION-GLOBAL.page_number_SHOW == 4 : {
+            visible : true;
+        }
+        hiden when CONST-FUNCTION-GLOBAL.page_number_SHOW != 4 : {
+            visible : false;
+        }
+    ]
+}
+// DINH NGHIA CAC HAM TUONG TAC VOI C++ VE SAU
+//
+export component homePage inherits Window {
+    callback unFocusALLFoucus();
+    unFocusALLFoucus => {
+        focusBackground.focus();
+    }
+    width: CONST-FUNCTION-GLOBAL.MAX_WIDTH;
+    height: CONST-FUNCTION-GLOBAL.MAX_HEIGHT;
+    background: #FDF5E6;
+    focusBackground := FocusScope {}
+
+    warning := LogWarning {
+        x: 0;
+        y: 0;
+        z: 2;
+        visible: CONST-FUNCTION-GLOBAL.show_warning;
+    }
+    HorizontalLayout {
+        alignment: center;
+        VerticalLayout {
+            alignment: start;
+            navbar := NAVBAR {z: 1;}
+            // Rectangle {
+            //     width: CONST-FUNCTION-GLOBAL.MAX_WIDTH;
+            //     height: CONST-FUNCTION-GLOBAL.MAX_HEIGHT * 0.92;
+            //     passengerPage {z : 1; unFocusPassPage => {
+            //             unFocusALLFoucus();
+            //         }
+            //     }
+            //     ticketPage {z: 1;}
+            //     planePage {z : 1;}
+            //     flightPage {z : 1;}
+            //     staticticalpage {z : 1;}
+            //     // day se la phan phan page
+            // }
+            a := Rectangle {
+                background: red;
+                width: 150px;
+                height: 150px;
+                TouchArea {
+                    clicked => {
+                        a.background = rgb(0,0,0);
+                        CONST-FUNCTION-GLOBAL.SHOW_WARNING_ERORR("WANSdfjhioewjkeoi");
+                    }
+                }
+            }
+        }
+    }
+}

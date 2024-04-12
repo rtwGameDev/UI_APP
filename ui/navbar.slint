@@ -1,0 +1,40 @@
+import { CONST_FUNCTION_GLOBAL } from "CONST_FUNCTION.slint";
+export component NAVBAR inherits Rectangle {
+    width: CONST-FUNCTION-GLOBAL.MAX_WIDTH;
+    height: CONST-FUNCTION-GLOBAL.MAX_HEIGHT * 0.08;
+    background: #FDF5E6;
+    drop-shadow-blur: 5phx;
+    drop-shadow-color: black;
+    HorizontalLayout {
+        padding: 8px;
+        padding-left: CONST-FUNCTION-GLOBAL.SPACEAPPAROUND;
+        padding-right: CONST-FUNCTION-GLOBAL.SPACEAPPAROUND;
+        spacing: 8phx;
+        for i[index] in ["Passenger", "Airline tickets", "Plane", "Flight", "Statistical"] : a := Rectangle {
+            underline := Rectangle {
+                width: parent.width;
+                height: 4px;
+                background: black;
+                y : parent.height + 0phx;
+                visible: false;
+            }
+            horizontal-stretch: 1;
+            background: #EEE8AA;
+            text_content := Text {text: i;color: black;font-weight: 500;font-size: 24phx;}
+            AREA := TouchArea {
+                clicked => {
+                    CONST-FUNCTION-GLOBAL.page_number_SHOW = index;
+                }
+            }
+            states [
+                clickedButton when AREA.pressed : {
+                    a.background : #FA8072;
+                }
+                Choose when index == CONST-FUNCTION-GLOBAL.page_number_SHOW : {
+                    a.background: #FF7F50;
+                    underline.visible : true;
+                }
+            ]
+        }
+    }
+}
