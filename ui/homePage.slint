@@ -9,21 +9,57 @@ struct flight {
     flightCode : string,
     departure : string,
     destination : string,
-    trangthai : int,
+    state : int,
     planeCode : string,
 }
+struct passenger {
+    SCMND : string,
+    Ho : string,
+    Ten : string,
+    phai: int
+}
 export global functionAPP {
+    in-out property <string> currentTime : "13/04/2024 15:14:09";
     // noi day se dat cac data cua ppp 
     in-out property <[flight]> flightListPassengerPage : [
-        {flightCode : "DESA", departure : "25/11/2023 ", destination : "ha Noi", trangthai : 1, planeCode : "MH370"},
-        {flightCode : "DESA", departure : "25/11/2023 ", destination : "ha Noi", trangthai : 1, planeCode : "MH370"},
-        {flightCode : "DESA", departure : "25/11/2023 ", destination : "ha Noi", trangthai : 1, planeCode : "MH370"},
-        {flightCode : "DESA", departure : "25/11/2023 ", destination : "ha Noi", trangthai : 1, planeCode : "MH370"},
-        {flightCode : "DESA", departure : "25/11/2023 ", destination : "ha Noi", trangthai : 1, planeCode : "MH370"},
-        {flightCode : "DESA", departure : "25/11/2023 ", destination : "ha Noi", trangthai : 1, planeCode : "MH370"},
-        {flightCode : "DESA", departure : "25/11/2023 ", destination : "ha Noi", trangthai : 1, planeCode : "MH370"},
-        {flightCode : "DESA", departure : "25/11/2023 ", destination : "ha Noi", trangthai : 1, planeCode : "MH370"}
+        {flightCode : "LOIREA", departure : "25/11/2023 ", destination : "ha Noi", state : 3, planeCode : "MH370"},
+        {flightCode : "KASSADIN", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "ZED", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "YASUO", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "VALUE", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "VARUS", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "AATROXX", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "DARIUS", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "LOIREA", departure : "25/11/2023 ", destination : "ha Noi", state : 3, planeCode : "MH370"},
+        {flightCode : "KASSADIN", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "ZED", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "YASUO", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "VALUE", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "VARUS", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "AATROXX", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "DARIUS", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "LOIREA", departure : "25/11/2023 ", destination : "ha Noi", state : 3, planeCode : "MH370"},
+        {flightCode : "KASSADIN", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "ZED", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "YASUO", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "VALUE", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "VARUS", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "AATROXX", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "DARIUS", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
     ];
+    in-out property <[passenger]> listPassengerOnFlight;
+    // true thi ngay lap tuc lay du lieu cac o input
+    in-out property <string> inputSearchFlightCode_passPage;
+    in-out property <string> inputDayFliter_passPage;
+    in-out property <string> inputMonthFliter_passPage;
+    in-out property <string> inputYearFliter_passPage;
+    in-out property <string> inputDestinationFliter_passPage;
+
+    callback handleDataSearch_passPage(); // khi goi ham nay, se lay cac gia tri trong lineEdit, gan len tren cac bien phia tren
+    callback handleFilterListFlightPassPageByCPP(string, string, string, string, string); // dinh nghia va su ly ben C++
+    handleDataSearch_passPage => {
+        handleFilterListFlightPassPageByCPP(inputDayFliter_passPage, inputMonthFliter_passPage, inputYearFliter_passPage, inputDestinationFliter_passPage, inputSearchFlightCode_passPage);
+    }
 }
 component passengerPage-search_filghtCode inherits Rectangle {
     border-width: 4phx;
@@ -42,13 +78,15 @@ component passengerPage-search_filghtCode inherits Rectangle {
                 background: gray;
                 height: 40phx;
                 width: 250phx;
-                flightCode_input := LineEdit {
+                LineEdit {
                     width: 100%;
                     height: 100%;
                     placeholder-text: "Enter Flight Code";
                     horizontal-alignment: center;
                     font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;
-                    edited => {flightCode = self.text;}
+                    edited => {
+                        functionAPP.inputSearchFlightCode_passPage = self.text;
+                    }
                 }
             }
         }
@@ -63,7 +101,7 @@ component passengerPage_search inherits Rectangle {
             alignment: start;
             padding: 4phx;
             padding-left: 0;
-            searchInfo := passengerPage-search-filghtCode {
+            passengerPage-search-filghtCode {
                 height: 100%;
             }
             Rectangle {
@@ -77,8 +115,8 @@ component passengerPage_search inherits Rectangle {
                 touchArea := TouchArea {
                     clicked => {
                         // searchInfo.flightCode la ma chuyen bay trong o text
-                        debug(searchInfo.flightCode);
                         unFocusPassSearch();
+                        functionAPP.handleDataSearch_passPage();
                     }
                 }
                 states [
@@ -91,13 +129,16 @@ component passengerPage_search inherits Rectangle {
     }
 }
 component boxFilterDAY inherits Rectangle {
-    in-out property <string> data;
+    callback getDayFliterBoxPP() -> string;
+    getDayFliterBoxPP => {
+        return inputDayFliter.text;
+    }
     height: 50px;
     HorizontalLayout {
         Rectangle {
             width : 40%;
             background: #C0C0C0;
-            Text {text: "DAY";font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;}
+            Text {text: "DAY";font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;horizontal-alignment: center;}
             TouchArea {
                 clicked => {
                     inputDayFliter.focus();
@@ -107,21 +148,30 @@ component boxFilterDAY inherits Rectangle {
         Rectangle {
             background: gray;
             horizontal-stretch: 7;
-            inputDayFliter := LineEdit {width: 100%; height: 100%;font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;}
+            inputDayFliter := LineEdit {
+                width: 100%; height: 100%;font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;
+                horizontal-alignment: center;
+                placeholder-text: "Enter the date data field";
+                edited => {
+                    functionAPP.inputDayFliter_passPage = self.text;
+                }
+            }
         }
     }
 }
 component boxFilterMONTH inherits Rectangle {
-    in-out property <string> data;
+    callback getMonthFliterBoxPP() -> string;
+    getMonthFliterBoxPP => {
+        return inputMonthFilter.text;
+    }
     height: 50px;
     HorizontalLayout {
         Rectangle {
             width: 40%;
             background: #C0C0C0;
-            Text {text: "MONTH";font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;}
+            Text {text: "MONTH";font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;horizontal-alignment: center;}
             TouchArea {
                 clicked => {
-                    CONST-FUNCTION-GLOBAL.SHOW_WARNING_ERORR("SS");
                     inputMonthFilter.focus();
                 }
             }
@@ -129,18 +179,27 @@ component boxFilterMONTH inherits Rectangle {
         Rectangle {
             background: gray;
             horizontal-stretch: 7;
-            inputMonthFilter := LineEdit {width: 100%; height: 100%;font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;}
+            inputMonthFilter := LineEdit {
+                width: 100%; height: 100%;font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;horizontal-alignment: center;
+                placeholder-text: "Enter the month data field";
+                edited => {
+                    functionAPP.inputMonthFliter_passPage = self.text
+                }
+            }
         }
     }
 }
 component boxFilterYEAR inherits Rectangle {
-    in-out property <string> data;
+    callback getYearFliterBoxPP() -> string;
+    getYearFliterBoxPP => {
+        return inputYearFilter.text;
+    }
     height: 50px;
     HorizontalLayout {
         Rectangle {
             width: 40%;
             background: #C0C0C0;
-            Text {text: "YEAR";font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;}
+            Text {text: "YEAR";font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;horizontal-alignment: center;}
             TouchArea {
                 clicked => {
                     inputYearFilter.focus();
@@ -150,28 +209,43 @@ component boxFilterYEAR inherits Rectangle {
         Rectangle {
             background: gray;
             horizontal-stretch: 7;
-            inputYearFilter := LineEdit {width: 100%; height: 100%;font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;}
+            inputYearFilter := LineEdit {
+                width: 100%; height: 100%;font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;horizontal-alignment: center;
+                placeholder-text: "Enter the year data field";
+                edited => {
+                    functionAPP.inputYearFliter_passPage = self.text;
+                }
+            }
         }
     }
 }
 component boxFilterDESTINATION inherits Rectangle {
-    in-out property <string> data;
+    callback getDesFliterBoxPP() -> string;
+    getDesFliterBoxPP => {
+        return inputDesFilter.text;
+    }
     height: 50px;
     HorizontalLayout {
         Rectangle {
             width: 40%;
             background: #C0C0C0;
-            Text {text: "DESTINATION";font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;}
+            Text {text: "DESTINATION";font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;horizontal-alignment: center;}
             TouchArea {
                 clicked => {
-                    inputDesFliter.focus();
+                    inputDesFilter.focus();
                 }
             }
         }
         Rectangle {
             background: gray;
             horizontal-stretch: 7;
-            inputDesFliter := LineEdit {width: 100%; height: 100%;font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;}
+            inputDesFilter := LineEdit {
+                width: 100%; height: 100%;font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;horizontal-alignment: center;
+                placeholder-text: "Enter the destination data field";
+                edited => {
+                    functionAPP.inputDestinationFliter_passPage = self.text;
+                }
+            }
         }
     }
 }
@@ -182,17 +256,17 @@ component blockClickPassenger inherits Rectangle {
         alignment: end;
         HorizontalLayout {
             alignment: center;
-            myButtonFliter := Rectangle {
+            Rectangle {
                 btnArea := TouchArea {
                     clicked => {
                         unfocusFilterThere();
+                        functionAPP.handleDataSearch_passPage();
                     }
                 }
                 width: 200phx;
                 height: 80phx;
                 background: #FDF5E6;
                 Text {text: "FILTER";color: black; font-size:16phx; font-weight: 700;}
-
                 states [
                     ac when btnArea.pressed : {
                         background: #FFF;
@@ -226,32 +300,82 @@ component FilterBoxFlightPassenger inherits Rectangle {
         }
     }
 }
-component listPassenger inherits Rectangle {
-    // border-width: 4phx;
-    // border-color: black;
-    ListView {
-        width: 100%;
-        height: 100%;
-        for data[index] in functionAPP.flightListPassengerPage : VerticalLayout {
-            padding: 4phx;
-            itemList := Rectangle {
-            width: 100%;
-            height: 40phx;
-            background: wheat;
-            itemListArea := TouchArea {
-                clicked => {
-                    
+component itemListPass inherits Rectangle {
+    in-out property <int> stt;
+    in-out property <string> flightCode;
+    in-out property <string> departure;
+    in-out property <string> destination;
+    in-out property <int> states;
+    in-out property <string> planeCode;
+    drop-shadow-blur: 5phx;
+    drop-shadow-color: red;
+    drop-shadow-offset-y: 2phx;
+    width: 100%;
+    height: 40phx;
+    background: wheat;
+    itemArea := TouchArea {
+        clicked => {
+            CONST-FUNCTION-GLOBAL.page_number_SHOW = 5;
+        }
+    }
+    HorizontalLayout {
+        alignment: space-around;
+        Rectangle {width: 5%;  height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: stt; color : black;}}
+        Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: flightCode; color : black;}}
+        Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: departure; color : black;}}
+        Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: destination; color : black;}}
+        Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text:  states == 0 ? "Huy chuyen" : (states == 1 ? "Con ve" : (states == 2 ? "Het ve" : "Hoan thanh")) ; color : black;}}
+        Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: planeCode; color : black;}}
+    }
+    states [
+        hasPress when itemArea.pressed == true : {
+            background : #ffdcf9;
+        }
+        hasHover when itemArea.has-hover : {
+            background : #FF9999;
+        }
+    ]
+}
+component listFlightPassenger inherits Rectangle {
+    VerticalLayout {
+        VerticalLayout {
+            padding: 4px;
+            Rectangle {
+                drop-shadow-blur: 5phx;
+                drop-shadow-color: red;
+                drop-shadow-offset-y: 2phx;
+                width: 100%;
+                height: 40phx;
+                background: #C0C0C0;
+                HorizontalLayout {
+                    alignment: space-around;
+                    Rectangle {width: 5%;  height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: "STT"; color : black;}}
+                    Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: "Flight Code"; color : black;}}
+                    Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: "Departure"; color : black;}}
+                    Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: "Destination"; color : black;}}
+                    Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text:  "State" ; color : black;}}
+                    Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: "Plane Code"; color : black;}}
                 }
             }
-            states [
-                hasHover when itemListArea.has-hover : {
-                    itemList.background : #FF9999;
+        }
+        ListView {
+            width: 100%;
+            // height: 100%;
+            for data[index] in functionAPP.flightListPassengerPage : VerticalLayout {
+                padding: 4phx;
+                item := itemListPass{
+                    stt: index + 1;
+                    flightCode: data.flightCode;
+                    departure: data.departure;
+                    destination: data.destination;
+                    states: data.state;
+                    planeCode: data.planeCode;
                 }
-            ]
             }
         }
     }
 }
+
 component passengerPage_list_filterBox inherits Rectangle{
     callback unfocusBlockFliter();
     height: (CONST-FUNCTION-GLOBAL.MAX_HEIGHT * 0.92)* 0.865;
@@ -262,9 +386,9 @@ component passengerPage_list_filterBox inherits Rectangle{
         vertical-stretch: 1;
         HorizontalLayout {
             spacing: 12phx;
-            listPassenger := Rectangle {
+            listFlightPassenger := Rectangle {
                 horizontal-stretch: 7;
-                listPassenger {}
+                listFlightPassenger {}
             }
             filterPassager := Rectangle {
                 horizontal-stretch: 3;
@@ -298,8 +422,25 @@ component passengerPage inherits Rectangle {
         }
     ]
 }
+component passengerListPage inherits Rectangle {
+    width: 100phx; height: 100phx;background: red; Text {text: "Danh Sach Hanh Khach";}
+    TouchArea {
+        clicked => {
+            CONST-FUNCTION-GLOBAL.SHOW_WARNING_ERORR("CANH BAO BAO MAT");
+            // CONST-FUNCTION-GLOBAL.page_number_SHOW = 0;
+        }
+    }
+    states [
+        show when CONST-FUNCTION-GLOBAL.page_number_SHOW == 5 : {
+            visible : true;
+        }
+        hiden when CONST-FUNCTION-GLOBAL.page_number_SHOW != 5 : {
+            visible : false;
+        }
+    ]
+}
 component ticketPage inherits Rectangle {
-    width: 100phx; height: 100phx;background: red; Text {text: "Ve CHuyen Bay";}
+    width: 500phx; height: 100phx;Text {text: functionAPP.currentTime; font-size: 25phx;}background: red;
     states [
         show when CONST-FUNCTION-GLOBAL.page_number_SHOW == 1 : {
             visible : true;
@@ -333,6 +474,11 @@ component flightPage inherits Rectangle {
         }
     ]
 }
+//
+
+// UI KHOA
+
+//
 component staticticalpage inherits Rectangle {
     width: 100phx; height: 100phx;background: red; Text {text: "Thong Ke";}
 
@@ -345,7 +491,6 @@ component staticticalpage inherits Rectangle {
         }
     ]
 }
-// DINH NGHIA CAC HAM TUONG TAC VOI C++ VE SAU
 //
 export component homePage inherits Window {
     callback unFocusALLFoucus();
@@ -368,29 +513,30 @@ export component homePage inherits Window {
         VerticalLayout {
             alignment: start;
             navbar := NAVBAR {z: 1;}
-            // Rectangle {
-            //     width: CONST-FUNCTION-GLOBAL.MAX_WIDTH;
-            //     height: CONST-FUNCTION-GLOBAL.MAX_HEIGHT * 0.92;
-            //     passengerPage {z : 1; unFocusPassPage => {
-            //             unFocusALLFoucus();
-            //         }
-            //     }
-            //     ticketPage {z: 1;}
-            //     planePage {z : 1;}
-            //     flightPage {z : 1;}
-            //     staticticalpage {z : 1;}
-            //     // day se la phan phan page
-            // }
-            a := Rectangle {
-                background: red;
-                width: 150px;
-                height: 150px;
-                TouchArea {
-                    clicked => {
-                        a.background = rgb(0,0,0);
-                        CONST-FUNCTION-GLOBAL.SHOW_WARNING_ERORR("WANSdfjhioewjkeoi");
+            Rectangle {
+                width: CONST-FUNCTION-GLOBAL.MAX_WIDTH;
+                height: CONST-FUNCTION-GLOBAL.MAX_HEIGHT * 0.92;
+                clock := Rectangle {
+                    width: 200phx;
+                    height: 40phx;
+                    background: red;
+                    y: 0;
+                    z : 0;
+                    x : parent.width / 2 - self.width / 2;
+                    Text {text: functionAPP.currentTime; font-size: 20phx;font-weight: 700;}
+                }
+                passengerPage {
+                    z : 1;
+                    unFocusPassPage => {
+                        unFocusALLFoucus();
                     }
                 }
+                ticketPage {z: 1;}
+                planePage {z : 1;}
+                flightPage {z : 1;}
+                staticticalpage {z : 1;}
+                passengerListPage {z : 1;}
+                // day se la phan phan page
             }
         }
     }
